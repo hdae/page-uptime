@@ -1,5 +1,3 @@
-
-import { secret } from "@/main"
 import { addDays } from "date-fns"
 import ky from "ky"
 
@@ -63,8 +61,8 @@ export const getToken = async () => {
         .post("https://accounts.google.com/o/oauth2/token", {
             json: {
                 refresh_token,
-                client_id: secret.web.client_id,
-                client_secret: secret.web.client_secret,
+                client_id: import.meta.env.VITE_CLIENT_ID,
+                client_secret: import.meta.env.VITE_CLIENT_SECRET,
                 redirect_uri: location.origin,
                 grant_type: "refresh_token",
             },
@@ -83,8 +81,8 @@ export const getCode = async () => {
             .post("https://accounts.google.com/o/oauth2/token", {
                 json: {
                     code,
-                    client_id: secret.web.client_id,
-                    client_secret: secret.web.client_secret,
+                    client_id: import.meta.env.VITE_CLIENT_ID,
+                    client_secret: import.meta.env.VITE_CLIENT_SECRET,
                     redirect_uri: location.origin,
                     grant_type: "authorization_code",
                 },
@@ -96,11 +94,11 @@ export const getCode = async () => {
         return response.access_token
     }
 
-    const url = new URL(secret.web.auth_uri)
+    const url = new URL(import.meta.env.VITE_AUTH_URI)
 
     Object.entries({
         access_type: "offline",
-        client_id: secret.web.client_id,
+        client_id: import.meta.env.VITE_CLIENT_ID,
         flowName: "GeneralOAuthFlow",
         prompt: "consent",
         redirect_uri: location.origin,
