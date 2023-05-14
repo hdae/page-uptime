@@ -94,7 +94,7 @@ export const getCode = async () => {
         return response.access_token
     }
 
-    const url = new URL(import.meta.env.VITE_AUTH_URI)
+    const url = new URL("https://accounts.google.com/o/oauth2/auth")
 
     Object.entries({
         access_type: "offline",
