@@ -26,6 +26,8 @@ type SleepResult = {
     nextPageToken: string
 }
 
+const app_url = `${location.origin}${import.meta.env.BASE_URL}`
+
 export const getLatest = async (token: string) => {
     const url = new URL(
         "https://www.googleapis.com/fitness/v1/users/me/sessions"
@@ -63,7 +65,7 @@ export const getToken = async () => {
                 refresh_token,
                 client_id: import.meta.env.VITE_CLIENT_ID,
                 client_secret: import.meta.env.VITE_CLIENT_SECRET,
-                redirect_uri: location.origin,
+                redirect_uri: app_url,
                 grant_type: "refresh_token",
             },
         })
@@ -83,13 +85,15 @@ export const getCode = async () => {
                     code,
                     client_id: import.meta.env.VITE_CLIENT_ID,
                     client_secret: import.meta.env.VITE_CLIENT_SECRET,
-                    redirect_uri: location.origin,
+                    redirect_uri: app_url,
                     grant_type: "authorization_code",
                 },
             })
             .json<TokenResult>()
 
         localStorage.setItem("refresh_token", response.refresh_token)
+
+        location.replace(app_url)
 
         return response.access_token
     }
@@ -101,7 +105,7 @@ export const getCode = async () => {
         client_id: import.meta.env.VITE_CLIENT_ID,
         flowName: "GeneralOAuthFlow",
         prompt: "consent",
-        redirect_uri: location.origin,
+        redirect_uri: app_url,
         response_type: "code",
         scope: "https://www.googleapis.com/auth/fitness.sleep.read",
     }).forEach(([key, value]) => url.searchParams.append(key, value))
